@@ -27,7 +27,7 @@ Este arquivo registra o que já foi feito e o que ainda falta. Atualizar as caix
 - [x] Validar o esqueleto Terraform com `fmt` e `validate`.
 - [x] Revisar se não existem credenciais ou endpoints antigos.
 - [x] Fazer o primeiro commit local com a base segura.
-- [ ] Publicar o primeiro commit no GitHub (aguardando autorização explícita).
+- [x] Publicar o primeiro commit no GitHub.
 
 ## AWS Academy — não iniciado
 
