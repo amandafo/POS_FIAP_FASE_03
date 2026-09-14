@@ -1,0 +1,32 @@
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+*.tfvars
+!terraform.tfvars.example
+
+# Segredos e configuracoes locais
+.env
+.env.*
+!.env.example
+**/secrets.yaml
+**/*secret*.json
+
+# Python e testes
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+.ruff_cache/
+.coverage
+htmlcov/
+coverage.out
+coverage.xml
+
+# Builds
+dist/
+
+# Guia privado de implementacao
+GUIA_IMPLEMENTACAO_FASE_03_PRIVADO.md
