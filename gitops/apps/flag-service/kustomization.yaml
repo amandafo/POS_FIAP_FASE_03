@@ -6,4 +6,4 @@ resources:
 images:
   - name: service-image
     newName: 560109405379.dkr.ecr.us-east-1.amazonaws.com/flag-service
-    newTag: fd41560027b8f8a9a2331cbb6bb994a2a5ed3dd4
+    newTag: 7edbee1ce26ef14b439e14412880659bb72212a7
