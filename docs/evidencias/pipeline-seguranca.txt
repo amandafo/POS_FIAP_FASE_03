@@ -1,0 +1,21 @@
+EVIDÊNCIA — BLOQUEIO DEVSECOPS
+Data: 14/09/2026
+
+Pull Request temporária, encerrada sem merge:
+https://github.com/amandafo/POS_FIAP_FASE_03/pull/1
+
+Execução com atualização de segurança removida propositalmente:
+https://github.com/amandafo/POS_FIAP_FASE_03/actions/runs/34916194667
+
+Resultado:
+- failure no passo "Scan da imagem";
+- Trivy encontrou 3 vulnerabilidades CRITICAL;
+- a imagem não foi publicada;
+- a alteração vulnerável não entrou na branch main.
+
+Execução depois de restaurar a atualização de segurança:
+https://github.com/amandafo/POS_FIAP_FASE_03/actions/runs/34916382484
+
+Resultado:
+- success;
+- testes, lint, SAST, SCA, build e scan aprovados.

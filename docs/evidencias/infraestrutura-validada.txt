@@ -1,0 +1,28 @@
+EVIDÊNCIA — INFRAESTRUTURA AWS
+Data: 14/09/2026
+
+Provisionamento realizado com Terraform e state remoto no S3.
+
+Resultado do primeiro apply:
+- 50 recursos adicionados;
+- 0 alterados;
+- 0 destruídos;
+- nenhuma role ou policy IAM criada.
+
+Plataforma instalada em um segundo apply:
+- ArgoCD;
+- External Secrets Operator;
+- Metrics Server.
+
+Validação final:
+- EKS ACTIVE;
+- Node Group ACTIVE;
+- 2 nodes Ready;
+- 3 RDS PostgreSQL available;
+- Redis available;
+- DynamoDB ACTIVE;
+- SQS e DLQ criadas;
+- 5 repositórios ECR criados;
+- 3 Jobs de inicialização dos bancos Complete.
+
+Este arquivo não contém IDs de conta, endpoints, ARNs ou credenciais.

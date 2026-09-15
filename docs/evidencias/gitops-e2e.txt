@@ -1,0 +1,31 @@
+EVIDÊNCIA — GITOPS E TESTE E2E AWS
+Data: 14/09/2026
+
+GitHub Actions:
+- os cinco pipelines terminaram com success;
+- as imagens foram publicadas no ECR com a tag do commit;
+- cada pipeline alterou o kustomization do próprio serviço.
+
+ArgoCD:
+- aplicação raiz Synced e Healthy;
+- auth-service Synced e Healthy;
+- flag-service Synced e Healthy;
+- targeting-service Synced e Healthy;
+- evaluation-service Synced e Healthy;
+- analytics-service Synced e Healthy.
+
+Kubernetes:
+- 6 réplicas das aplicações Running;
+- 0 reinícios durante a validação;
+- Load Balancer criado para o evaluation-service.
+
+Teste E2E executado por scripts/comprovacao-aws-e2e.sh:
+- 5 health checks aprovados;
+- flag configurada e ativada;
+- regra de targeting configurada;
+- evaluation-service retornou decisão positiva;
+- evento enviado ao SQS;
+- analytics-service consumiu o evento;
+- novo item confirmado no DynamoDB.
+
+Resultado final: APROVADO.
