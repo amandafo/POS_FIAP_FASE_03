@@ -59,7 +59,9 @@ Este arquivo registra o que já foi feito e o que ainda falta. Atualizar as caix
 - [x] Validar workflows com Actionlint.
 - [x] Cadastrar os quatro secrets temporários no GitHub Actions.
 - [x] Publicar as cinco imagens iniciais no ECR com SHA.
-- [ ] Validar sincronização automática.
+- [x] Validar sincronização automática.
+- [x] Validar os cinco pipelines no GitHub Actions.
+- [x] Executar teste E2E completo no ambiente AWS.
 - [ ] Demonstrar falha de segurança e correção.
 
 ## Entrega — não iniciado
@@ -102,3 +104,8 @@ Este arquivo registra o que já foi feito e o que ainda falta. Atualizar as caix
 - Plataforma: ArgoCD, External Secrets e Metrics Server disponíveis.
 - Segurança de containers: três CVEs críticas da imagem Python foram detectadas, corrigidas e os novos scans foram aprovados.
 - Workflows: um reutilizável e cinco pipelines validados localmente com Actionlint.
+- GitHub Actions: cinco pipelines aprovados com testes, segurança, build e push no ECR.
+- GitOps: cinco commits automáticos de imagem realizados pelos pipelines.
+- ArgoCD: aplicação raiz e cinco serviços `Synced` e `Healthy`.
+- Kubernetes: seis réplicas das aplicações em estado `Running`.
+- E2E AWS: health checks, flag, targeting, evaluation, SQS, analytics e DynamoDB aprovados.
