@@ -1,0 +1,16 @@
+name: evaluation-service
+on:
+  pull_request:
+    paths: ["evaluation-service/**", ".github/workflows/**", "scripts/update-gitops-image.sh"]
+  push:
+    branches: [main]
+    paths: ["evaluation-service/**", ".github/workflows/**", "scripts/update-gitops-image.sh"]
+permissions:
+  contents: write
+jobs:
+  pipeline:
+    uses: ./.github/workflows/reusable-service-ci.yml
+    with:
+      service: evaluation-service
+      language: go
+    secrets: inherit

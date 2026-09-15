@@ -1,26 +1,32 @@
 # ToggleMaster — Tech Challenge Fase 3
 
-Evolução do ToggleMaster da Fase 2 para uma plataforma com Infraestrutura como Código, CI/DevSecOps e entrega contínua por GitOps.
+Evolução do ToggleMaster para uma plataforma de microsserviços com infraestrutura criada por Terraform, pipelines DevSecOps e deploy automático por GitOps.
 
-## Microsserviços
+## Arquitetura
 
-| Serviço | Tecnologia | Função |
+O projeto contém cinco serviços:
+
+| Serviço | Tecnologia | Responsabilidade |
 |---|---|---|
-| `auth-service` | Go | Validação e administração de chaves de API |
-| `flag-service` | Python/Flask | Gerenciamento de feature flags |
-| `targeting-service` | Python/Flask | Regras de segmentação |
-| `evaluation-service` | Go | Avaliação das flags, cache e publicação de eventos |
-| `analytics-service` | Python/Flask | Consumo dos eventos e persistência analítica |
+| `auth-service` | Go | Cria e valida chaves de API |
+| `flag-service` | Python/Flask | Gerencia feature flags |
+| `targeting-service` | Python/Flask | Gerencia regras de segmentação |
+| `evaluation-service` | Go | Avalia flags, usa Redis e publica eventos no SQS |
+| `analytics-service` | Python/Flask | Consome o SQS e grava eventos no DynamoDB |
 
-## Objetivo desta fase
+Na AWS, o Terraform cria VPC, duas subnets públicas, duas privadas, NAT Gateway, EKS com node group, três RDS PostgreSQL, Redis, DynamoDB, SQS com DLQ, cinco ECR e segredos no Secrets Manager. O state fica em um bucket S3 remoto.
 
-- provisionar a AWS com Terraform e state remoto no S3;
-- usar a `LabRole` existente do AWS Academy, sem criar IAM;
-- testar código e dependências dos cinco serviços;
-- bloquear vulnerabilidades críticas;
-- publicar imagens no ECR com tag do commit;
-- manter manifests em `gitops/`;
-- deixar o ArgoCD sincronizar o EKS automaticamente.
+O projeto usa a `LabRole` já fornecida pelo AWS Academy. Nenhuma role ou policy IAM é criada pelo Terraform.
+
+## Fluxo de entrega
+
+1. Um Pull Request executa testes, lint, SAST, SCA, build e scan da imagem.
+2. Vulnerabilidades críticas impedem a publicação.
+3. Um push aprovado na `main` publica a imagem no ECR usando o SHA do commit.
+4. O pipeline altera a tag em `gitops/apps/<serviço>/kustomization.yaml`.
+5. O ArgoCD detecta o commit e sincroniza automaticamente o EKS.
+
+Não é usada a tag `latest` nos deployments.
 
 ## Executar localmente
 
@@ -30,42 +36,70 @@ Pré-requisito: Docker com Compose.
 make local-up
 make health
 make e2e
-```
-
-Encerrar:
-
-```bash
 make local-down
 ```
 
-Executar testes unitários em containers:
+Validações locais:
 
 ```bash
 make test
-```
-
-Executar verificações locais:
-
-```bash
 make lint
 make sast
 make sca
 make terraform-check
 ```
 
-## Estado atual
+## Trabalhar com o AWS Academy
 
-A base local foi copiada com segurança e o fluxo E2E está funcional. A infraestrutura AWS ainda não foi criada. O andamento completo está em `TODO.md`.
+As credenciais temporárias devem ser salvas em `credentials_aws_academy.txt`, que está no `.gitignore`. Para carregá-las:
+
+```bash
+source scripts/aws-academy-env.sh
+aws sts get-caller-identity
+```
+
+Sempre que a sessão for renovada, sincronize a credencial temporária usada pelo External Secrets e pelos dois serviços que acessam SQS/DynamoDB:
+
+```bash
+./scripts/sync-academy-k8s-credentials.sh
+```
+
+Terraform é executado em Docker:
+
+```bash
+source scripts/aws-academy-env.sh
+./scripts/terraform-docker.sh init -backend-config="bucket=<BUCKET_DO_STATE>"
+./scripts/terraform-docker.sh plan
+./scripts/terraform-docker.sh apply
+```
+
+O arquivo local ignorado `infra/terraform.tfvars` mantém `install_platform = true` depois da primeira instalação. Em uma conta nova, faça primeiro a infraestrutura com `false` e somente depois instale os charts com `true`.
+
+## GitOps e ArgoCD
+
+Os manifests estão em `gitops/`. Para cadastrar a aplicação raiz:
+
+```bash
+kubectl apply -f gitops/argocd/root-application.yaml
+kubectl get applications -n argocd
+```
+
+Para abrir a interface:
+
+```bash
+kubectl port-forward svc/argocd-server -n argocd 8080:80
+```
+
+Acesse `http://localhost:8080`. A senha inicial deve ser consultada diretamente no cluster e nunca adicionada ao repositório.
 
 ## Segurança
 
-- Credenciais e secrets não são versionados.
-- O arquivo sensível da Fase 2 não foi copiado.
-- O guia operacional privado é ignorado pelo Git.
-- IDs, endpoints e credenciais da conta AWS anterior não fazem parte da nova configuração.
+- Credenciais, states, planos Terraform e arquivos de variáveis locais são ignorados pelo Git.
+- Senhas dos bancos e chaves das aplicações ficam no AWS Secrets Manager.
+- O External Secrets entrega os valores ao Kubernetes sem secrets em YAML.
+- Como o AWS Academy não permite criar IAM, as credenciais temporárias dos workloads são sincronizadas por comando e precisam ser renovadas junto com a sessão.
+- As imagens rodam como usuário não root e com capabilities removidas.
 
-## Entrega esperada
+## Acompanhamento
 
-- repositório com Terraform, workflows, serviços e manifests GitOps;
-- vídeo de demonstração de até 20 minutos;
-- relatório com participantes, links, decisões, dificuldades e estimativa de custos.
+O estado detalhado das atividades está em [`TODO.md`](TODO.md). O relatório de entrega está em [`docs/RELATORIO_ENTREGA.md`](docs/RELATORIO_ENTREGA.md).

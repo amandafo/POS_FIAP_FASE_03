@@ -3,6 +3,7 @@
 *.tfstate
 *.tfstate.*
 *.tfplan
+tfplan
 crash.log
 *.tfvars
 !terraform.tfvars.example
@@ -13,6 +14,7 @@ crash.log
 !.env.example
 **/secrets.yaml
 **/*secret*.json
+credentials_aws_academy.txt
 
 # Python e testes
 __pycache__/

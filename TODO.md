@@ -29,29 +29,36 @@ Este arquivo registra o que já foi feito e o que ainda falta. Atualizar as caix
 - [x] Fazer o primeiro commit local com a base segura.
 - [x] Publicar o primeiro commit no GitHub.
 
-## AWS Academy — não iniciado
+## AWS Academy
 
-- [ ] Iniciar nova sessão do laboratório.
-- [ ] Renovar credenciais temporárias locais.
-- [ ] Validar conta e `LabRole`.
-- [ ] Criar bucket S3 para o state remoto.
-- [ ] Implementar e aplicar módulo de rede.
-- [ ] Implementar e aplicar cinco repositórios ECR.
-- [ ] Implementar e aplicar SQS e DynamoDB.
-- [ ] Implementar e aplicar três RDS e Redis.
-- [ ] Implementar e aplicar EKS e Node Group com role existente.
-- [ ] Instalar plataforma: ArgoCD, External Secrets e Metrics Server.
-- [ ] Inicializar bancos e validar todos os recursos.
+- [x] Iniciar nova sessão do laboratório.
+- [x] Renovar credenciais temporárias locais.
+- [x] Validar conta e `LabRole`.
+- [x] Criar bucket S3 criptografado para o state remoto.
+- [x] Conectar o Terraform ao backend remoto com lock.
+- [x] Implementar e aplicar módulo de rede.
+- [x] Implementar e aplicar cinco repositórios ECR.
+- [x] Implementar e aplicar SQS, DLQ e DynamoDB.
+- [x] Implementar e aplicar três RDS e Redis.
+- [x] Implementar e aplicar EKS e Node Group com a `LabRole` existente.
+- [x] Instalar ArgoCD, External Secrets e Metrics Server via Terraform/Helm.
+- [x] Integrar o External Secrets ao Secrets Manager.
+- [x] Criar rotina segura para renovar credenciais temporárias no Kubernetes.
+- [x] Inicializar os três bancos com Jobs idempotentes.
+- [x] Validar todos os recursos e dois nodes `Ready`.
 
-## CI/CD e GitOps — não iniciado
+## CI/CD e GitOps
 
-- [ ] Criar workflow reutilizável.
-- [ ] Criar workflow para cada um dos cinco serviços.
-- [ ] Configurar testes, lint, SAST, SCA e scan de container.
-- [ ] Configurar push no ECR com tag do commit.
-- [ ] Criar pasta `gitops/` com os cinco serviços.
-- [ ] Configurar commit automático da nova tag.
-- [ ] Configurar cinco Applications no ArgoCD.
+- [x] Criar workflow reutilizável.
+- [x] Criar workflow para cada um dos cinco serviços.
+- [x] Configurar testes, lint, SAST, SCA e scan de container.
+- [x] Configurar push no ECR com tag do commit.
+- [x] Criar pasta `gitops/` com os cinco serviços.
+- [x] Configurar commit automático da nova tag.
+- [x] Configurar cinco Applications no ArgoCD.
+- [x] Validar workflows com Actionlint.
+- [x] Cadastrar os quatro secrets temporários no GitHub Actions.
+- [x] Publicar as cinco imagens iniciais no ECR com SHA.
 - [ ] Validar sincronização automática.
 - [ ] Demonstrar falha de segurança e correção.
 
@@ -80,3 +87,18 @@ Este arquivo registra o que já foi feito e o que ainda falta. Atualizar as caix
 - Terraform `fmt` e `validate`: aprovados sem acessar a AWS.
 - Arquivo sensível `fase_02/k8s/secrets.yaml`: não copiado.
 - Recursos AWS criados: nenhum.
+
+### 14/09/2026 — AWS Academy e automação
+
+- Credenciais temporárias: validadas sem expor valores.
+- Backend Terraform: S3 com criptografia, versionamento, bloqueio público e lock.
+- Plano revisado: nenhum recurso IAM criado.
+- Terraform: 50 recursos de infraestrutura e 3 charts Helm aplicados.
+- EKS e Node Group: ativos, com dois nodes `Ready` e `LabRole` existente.
+- Bancos: três RDS PostgreSQL disponíveis e inicializados.
+- Dados e mensageria: Redis, DynamoDB, SQS e DLQ disponíveis.
+- Imagens: cinco repositórios ECR e cinco imagens iniciais por SHA.
+- Segredos: Secrets Manager e External Secrets sincronizados.
+- Plataforma: ArgoCD, External Secrets e Metrics Server disponíveis.
+- Segurança de containers: três CVEs críticas da imagem Python foram detectadas, corrigidas e os novos scans foram aprovados.
+- Workflows: um reutilizável e cinco pipelines validados localmente com Actionlint.

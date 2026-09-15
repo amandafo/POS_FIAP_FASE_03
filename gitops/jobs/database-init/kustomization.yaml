@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: togglemaster
+resources:
+  - jobs.yaml
+configMapGenerator:
+  - name: database-init-sql
+    files:
+      - auth-init.sql
+      - flag-init.sql
+      - targeting-init.sql
+generatorOptions:
+  disableNameSuffixHash: true

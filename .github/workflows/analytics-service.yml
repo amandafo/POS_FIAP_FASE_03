@@ -1,0 +1,16 @@
+name: analytics-service
+on:
+  pull_request:
+    paths: ["analytics-service/**", ".github/workflows/**", "scripts/update-gitops-image.sh"]
+  push:
+    branches: [main]
+    paths: ["analytics-service/**", ".github/workflows/**", "scripts/update-gitops-image.sh"]
+permissions:
+  contents: write
+jobs:
+  pipeline:
+    uses: ./.github/workflows/reusable-service-ci.yml
+    with:
+      service: analytics-service
+      language: python
+    secrets: inherit

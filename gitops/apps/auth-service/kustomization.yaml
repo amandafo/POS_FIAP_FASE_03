@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - deployment.yaml
+  - service.yaml
+images:
+  - name: service-image
+    newName: 560109405379.dkr.ecr.us-east-1.amazonaws.com/auth-service
+    newTag: f89d34da121ce0caa72a6a1c142cb8f6b3d316f6

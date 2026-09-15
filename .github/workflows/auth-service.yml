@@ -1,0 +1,16 @@
+name: auth-service
+on:
+  pull_request:
+    paths: ["auth-service/**", ".github/workflows/**", "scripts/update-gitops-image.sh"]
+  push:
+    branches: [main]
+    paths: ["auth-service/**", ".github/workflows/**", "scripts/update-gitops-image.sh"]
+permissions:
+  contents: write
+jobs:
+  pipeline:
+    uses: ./.github/workflows/reusable-service-ci.yml
+    with:
+      service: auth-service
+      language: go
+    secrets: inherit

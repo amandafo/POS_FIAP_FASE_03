@@ -1,0 +1,16 @@
+name: flag-service
+on:
+  pull_request:
+    paths: ["flag-service/**", ".github/workflows/**", "scripts/update-gitops-image.sh"]
+  push:
+    branches: [main]
+    paths: ["flag-service/**", ".github/workflows/**", "scripts/update-gitops-image.sh"]
+permissions:
+  contents: write
+jobs:
+  pipeline:
+    uses: ./.github/workflows/reusable-service-ci.yml
+    with:
+      service: flag-service
+      language: python
+    secrets: inherit
