@@ -1,0 +1,175 @@
+matheuskempa@DESKTOP-N0Q4F5F:~/Repositories/pos_amanda/repo/fase_03$ make e2e
+./scripts/comprovacao-e2e.sh
+
+== 1. Subindo ambiente local ==
+$ docker compose up -d --build
+[+] Building 0.0s (0/1)                                                                                   docker:default
+[+] Running 0/0
+ ⠋ Service auth-service       Building                                                                              0.1s
+[+] Building 0.3s (33/41)                                                                                 docker:default
+ => [auth-service] exporting to image                                                                               0.0s
+[+] Building 0.5s (43/44)                                                                                 docker:default
+[+] Building 0.7s (55/55) FINISHED                                                                        docker:default
+ => [auth-service internal] load build definition from Dockerfile                                                   0.0s
+ => => transferring dockerfile: 441B                                                                                0.0s
+ => [analytics-service internal] load build definition from Dockerfile                                              0.0s
+ => => transferring dockerfile: 534B                                                                                0.0s
+ => [evaluation-service internal] load metadata for docker.io/library/alpine:3.20                                   0.0s
+ => [evaluation-service internal] load metadata for docker.io/library/golang:1.26-alpine                            0.0s
+ => [auth-service internal] load .dockerignore                                                                      0.0s
+ => => transferring context: 2B                                                                                     0.0s
+ => [flag-service internal] load metadata for docker.io/library/python:3.11-slim                                    0.0s
+ => [analytics-service internal] load .dockerignore                                                                 0.0s
+ => => transferring context: 2B                                                                                     0.0s
+ => [evaluation-service stage-1 1/4] FROM docker.io/library/alpine:3.20                                             0.0s
+ => [auth-service internal] load build context                                                                      0.0s
+ => => transferring context: 283B                                                                                   0.0s
+ => [evaluation-service build 1/6] FROM docker.io/library/golang:1.26-alpine                                        0.0s
+ => [flag-service 1/6] FROM docker.io/library/python:3.11-slim                                                      0.0s
+ => [analytics-service internal] load build context                                                                 0.0s
+ => => transferring context: 668B                                                                                   0.0s
+ => CACHED [evaluation-service stage-1 2/4] RUN addgroup -g 10001 -S app && adduser -u 10001 -S app -G app          0.0s
+ => CACHED [evaluation-service stage-1 3/4] WORKDIR /app                                                            0.0s
+ => CACHED [evaluation-service build 2/6] WORKDIR /src                                                              0.0s
+ => CACHED [auth-service build 3/6] COPY go.mod go.sum ./                                                           0.0s
+ => CACHED [auth-service build 4/6] RUN go mod download                                                             0.0s
+ => CACHED [auth-service build 5/6] COPY . .                                                                        0.0s
+ => CACHED [auth-service build 6/6] RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /bin/auth-  0.0s
+ => CACHED [auth-service stage-1 4/4] COPY --from=build /bin/auth-service /app/auth-service                         0.0s
+ => CACHED [flag-service 2/6] WORKDIR /app                                                                          0.0s
+ => CACHED [flag-service 3/6] RUN apt-get update     && apt-get upgrade -y     && rm -rf /var/lib/apt/lists/*       0.0s
+ => CACHED [analytics-service 4/6] COPY requirements.txt .                                                          0.0s
+ => CACHED [analytics-service 5/6] RUN pip install --no-cache-dir -r requirements.txt                               0.0s
+ => CACHED [analytics-service 6/6] COPY . .                                                                         0.0s
+ => [auth-service] exporting to image                                                                               0.0s
+ => => exporting layers                                                                                             0.0s
+ => => writing image sha256:5548c979236524848a84ee9dd3deca6cbcb1c5bc1e77bd538464cb7c77bbbf34                        0.0s
+ => => naming to docker.io/library/fase_03-auth-service                                                             0.0s
+ => [analytics-service] exporting to image                                                                          0.0s
+ => => exporting layers                                                                                             0.0s
+ => => writing image sha256:79cf407adb25f77538c198e7b436e763c70707beb2613205e9deeb52e129ede7                        0.0s
+ => => naming to docker.io/library/fase_03-analytics-service                                                        0.0s
+ => [auth-service] resolving provenance for metadata file                                                           0.0s
+ => [analytics-service] resolving provenance for metadata file                                                      0.0s
+ => [targeting-service internal] load build definition from Dockerfile                                              0.0s
+ => => transferring dockerfile: 534B                                                                                0.0s
+ => [flag-service internal] load build definition from Dockerfile                                                   0.0s
+ => => transferring dockerfile: 534B                                                                                0.0s
+ => [targeting-service internal] load .dockerignore                                                                 0.0s
+ => => transferring context: 2B                                                                                     0.0s
+ => [flag-service internal] load .dockerignore                                                                      0.0s
+ => => transferring context: 2B                                                                                     0.0s
+ => [targeting-service internal] load build context                                                                 0.0s
+ => => transferring context: 721B                                                                                   0.0s
+ => [flag-service internal] load build context                                                                      0.0s
+ => => transferring context: 772B                                                                                   0.0s
+ => CACHED [targeting-service 4/6] COPY requirements.txt .                                                          0.0s
+ => CACHED [targeting-service 5/6] RUN pip install --no-cache-dir -r requirements.txt                               0.0s
+ => CACHED [targeting-service 6/6] COPY . .                                                                         0.0s
+ => CACHED [flag-service 4/6] COPY requirements.txt .                                                               0.0s
+ => CACHED [flag-service 5/6] RUN pip install --no-cache-dir -r requirements.txt                                    0.0s
+ => CACHED [flag-service 6/6] COPY . .                                                                              0.0s
+ => [targeting-service] exporting to image                                                                          0.0s
+ => => exporting layers                                                                                             0.0s
+ => => writing image sha256:2cf179d569f89c3e98a919a63d8e4a55746215d31cbc7a657d5a860bdc0352f3                        0.0s
+ => => naming to docker.io/library/fase_03-targeting-service                                                        0.0s
+ => [flag-service] exporting to image                                                                               0.0s
+ => => exporting layers                                                                                             0.0s
+ => => writing image sha256:b2c081f98375311cb93940fd2023cfe8e593cd862c5a5e718697fe0e4323dfe0                        0.0s
+ => => naming to docker.io/library/fase_03-flag-service                                                             0.0s
+ => [targeting-service] resolving provenance for metadata file                                                      0.0s
+ => [flag-service] resolving provenance for metadata file                                                           0.0s
+ => [evaluation-service internal] load build definition from Dockerfile                                             0.0s
+ => => transferring dockerfile: 465B                                                                                0.0s
+ => [evaluation-service internal] load .dockerignore                                                                0.0s
+ => => transferring context: 2B                                                                                     0.0s
+ => [evaluation-service internal] load build context                                                                0.0s
+ => => transferring context: 289B                                                                                   0.0s
+ => CACHED [evaluation-service build 3/6] COPY go.mod go.sum ./                                                     0.0s
+ => CACHED [evaluation-service build 4/6] RUN go mod download                                                       0.0s
+ => CACHED [evaluation-service build 5/6] COPY . .                                                                  0.0s
+ => CACHED [evaluation-service build 6/6] RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /bin  0.0s
+[+] Running 16/16ation-service stage-1 4/4] COPY --from=build /bin/evaluation-service /app/evaluation-service       0.0s
+ ✔ Service auth-service                    Built                                                                    0.3s
+ ✔ Service analytics-service               Built                                                                    0.3s
+ ✔ Service flag-service                    Built                                                                    0.3s
+ ✔ Service targeting-service               Built                                                                    0.3s
+ ✔ Service evaluation-service              Built                                                                    0.2s
+ ✔ Container fase_03-dynamodb-1            Running                                                                  0.0s
+ ✔ Container fase_03-sqs-1                 Running                                                                  0.0s
+ ✔ Container fase_03-redis-1               Healthy                                                                  1.5s
+ ✔ Container fase_03-dynamodb-init-1       Exited                                                                   1.8s
+ ✔ Container fase_03-analytics-service-1   Running                                                                  0.0s
+ ✔ Container fase_03-auth-db-1             Healthy                                                                  0.5s
+ ✔ Container fase_03-app-db-1              Healthy                                                                  1.0s
+ ✔ Container fase_03-auth-service-1        Running                                                                  0.0s
+ ✔ Container fase_03-targeting-service-1   Running                                                                  0.0s
+ ✔ Container fase_03-flag-service-1        Running                                                                  0.0s
+ ✔ Container fase_03-evaluation-service-1  Running                                                                  0.0s
+
+
+== 2. Health checks dos 5 microsservicos ==
+$ curl -fsS http://127.0.0.1:8001/health
+{"status":"ok"}
+
+$ curl -fsS http://127.0.0.1:8002/health
+{"status":"ok"}
+
+$ curl -fsS http://127.0.0.1:8003/health
+{"status":"ok"}
+
+$ curl -fsS http://127.0.0.1:8004/health
+{"status":"ok"}
+
+$ curl -fsS http://127.0.0.1:8005/health
+{"status":"ok"}
+
+
+== 3. Auth-service validando chave real no banco ==
+$ curl -fsS http://127.0.0.1:8001/validate -H Authorization: Bearer tm_key_dev_service
+{"message":"Chave válida"}
+
+
+== 4. Flag-service criando uma feature flag ==
+$ curl -fsS -X POST http://127.0.0.1:8002/flags -H Content-Type: application/json -H Authorization: Bearer tm_key_dev_service -d {"name":"proof-20260914232343","description":"Comprovacao E2E local","is_enabled":true}
+{"created_at":"Tue, 15 Sep 2026 02:23:46 GMT","description":"Comprovacao E2E local","id":4,"is_enabled":true,"name":"proof-20260914232343","updated_at":"Tue, 15 Sep 2026 02:23:46 GMT"}
+
+
+== 5. Targeting-service criando regra de segmentacao ==
+$ curl -fsS -X POST http://127.0.0.1:8003/rules -H Content-Type: application/json -H Authorization: Bearer tm_key_dev_service -d {"flag_name":"proof-20260914232343","is_enabled":true,"rules":{"type":"PERCENTAGE","value":100}}
+{"created_at":"Tue, 15 Sep 2026 02:23:46 GMT","flag_name":"proof-20260914232343","id":4,"is_enabled":true,"rules":{"type":"PERCENTAGE","value":100},"updated_at":"Tue, 15 Sep 2026 02:23:46 GMT"}
+
+
+== 6. Evaluation-service avaliando a flag criada ==
+$ curl -fsS http://127.0.0.1:8004/evaluate?user_id=user-proof-123&flag_name=proof-20260914232343
+{"flag_name":"proof-20260914232343","user_id":"user-proof-123","result":true}
+
+
+== 7. Aguardando analytics-service consumir SQS e gravar no DynamoDB Local ==
+
+== 8. Evidencia nos logs do analytics-service ==
+analytics-service-1  | 2026-09-15 02:23:46,244 - INFO - Evento b6faa025-1258-4c9c-86b7-dec3084ec185 (Flag: proof-20260914232343) salvo no DynamoDB.
+
+== 9. Evidencia no DynamoDB Local ==
+[+] Creating 1/0
+ ✔ Container fase_03-dynamodb-1  Running0.0s
+                "S": "proof-20260914232343"
+
+== 10. Estado final dos containers ==
+$ docker compose ps
+NAME                           IMAGE                                 COMMAND                  SERVICE              CREATED          STATUS                    PORTS
+fase_03-analytics-service-1    fase_03-analytics-service             "gunicorn --bind 0.0…"   analytics-service    36 minutes ago   Up 36 minutes             0.0.0.0:8005->8005/tcp, :::8005->8005/tcp
+fase_03-app-db-1               postgres:16-alpine                    "docker-entrypoint.s…"   app-db               36 minutes ago   Up 36 minutes (healthy)   0.0.0.0:15433->5432/tcp, [::]:15433->5432/tcp
+fase_03-auth-db-1              postgres:16-alpine                    "docker-entrypoint.s…"   auth-db              36 minutes ago   Up 36 minutes (healthy)   0.0.0.0:15432->5432/tcp, [::]:15432->5432/tcp
+fase_03-auth-service-1         fase_03-auth-service                  "/app/auth-service"      auth-service         36 minutes ago   Up 36 minutes             0.0.0.0:8001->8001/tcp, :::8001->8001/tcp
+fase_03-dynamodb-1             amazon/dynamodb-local:2.5.2           "java -jar DynamoDBL…"   dynamodb             36 minutes ago   Up 36 minutes             0.0.0.0:18000->8000/tcp, [::]:18000->8000/tcp
+fase_03-evaluation-service-1   fase_03-evaluation-service            "/app/evaluation-ser…"   evaluation-service   36 minutes ago   Up 36 minutes             0.0.0.0:8004->8004/tcp, :::8004->8004/tcp
+fase_03-flag-service-1         fase_03-flag-service                  "gunicorn --bind 0.0…"   flag-service         36 minutes ago   Up 36 minutes             0.0.0.0:8002->8002/tcp, :::8002->8002/tcp
+fase_03-redis-1                redis:7-alpine                        "docker-entrypoint.s…"   redis                36 minutes ago   Up 36 minutes (healthy)   0.0.0.0:16379->6379/tcp, [::]:16379->6379/tcp
+fase_03-sqs-1                  softwaremill/elasticmq-native:1.6.6   "/sbin/tini -- /opt/…"   sqs                  36 minutes ago   Up 36 minutes             0.0.0.0:9324-9325->9324-9325/tcp, :::9324-9325->9324-9325/tcp
+fase_03-targeting-service-1    fase_03-targeting-service             "gunicorn --bind 0.0…"   targeting-service    36 minutes ago   Up 36 minutes             0.0.0.0:8003->8003/tcp, :::8003->8003/tcp
+
+
+== Comprovacao concluida ==
+Flag usada no teste: proof-20260914232343
+Usuario usado no teste: user-proof-123

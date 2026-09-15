@@ -1,0 +1,165 @@
+
+============================================================
+ETAPA 01 — Validando ferramentas e sessão AWS
+============================================================
+[OK] Comando disponível: aws
+[OK] Comando disponível: kubectl
+[OK] Comando disponível: curl
+[OK] Comando disponível: python3
+[OK] Comando disponível: base64
+[OK] Sessão temporária do AWS Academy válida.
+[INFO] Região utilizada: us-east-1
+[INFO] Nenhuma credencial, ARN ou ID de conta será exibido por este teste.
+[OK] Permissão para consultar o cluster EKS confirmada.
+[OK] Permissão para consultar o DynamoDB confirmada.
+
+============================================================
+ETAPA 02 — Validando conexão com o EKS e estado das aplicações
+============================================================
+[INFO] Contexto Kubernetes selecionado: togglemaster-cluster
+[OK] 2 node(s) do EKS em estado Ready.
+
+Deployments e réplicas disponíveis:
+analytics-service    1/1   1     1     3h6m
+auth-service         1/1   1     1     3h6m
+evaluation-service   2/2   2     2     3h6m
+flag-service         1/1   1     1     3h6m
+targeting-service    1/1   1     1     3h6m
+[OK] Cinco deployments com todas as réplicas disponíveis.
+
+Pods ativos das aplicações antes do teste:
+NOME                                 READY   STATUS    REINICIOS
+analytics-service-cc8c4fd46-vn4c7    true    Running   0
+auth-service-857ffbbbc-kb9lm         true    Running   0
+evaluation-service-fff6bc749-9b8x8   true    Running   0
+evaluation-service-fff6bc749-qv4pk   true    Running   0
+flag-service-67f95d998c-sjcbn        true    Running   0
+targeting-service-64999db875-c6xdw   true    Running   0
+[OK] 6 pods ativos em estado Running.
+
+============================================================
+ETAPA 03 — Abrindo acesso temporário aos cinco microsserviços
+============================================================
+[INFO] auth-service: encaminhamento local 127.0.0.1:18001 iniciado.
+[INFO] flag-service: encaminhamento local 127.0.0.1:18002 iniciado.
+[INFO] targeting-service: encaminhamento local 127.0.0.1:18003 iniciado.
+[INFO] evaluation-service: encaminhamento local 127.0.0.1:18004 iniciado.
+[INFO] analytics-service: encaminhamento local 127.0.0.1:18005 iniciado.
+[OK] Cinco encaminhamentos iniciados somente em localhost.
+
+============================================================
+ETAPA 04 — Executando os cinco health checks
+============================================================
+[OK] auth-service         respondeu: {"status":"ok"}
+[OK] flag-service         respondeu: {"status":"ok"}
+[OK] targeting-service    respondeu: {"status":"ok"}
+[OK] evaluation-service   respondeu: {"status":"ok"}
+[OK] analytics-service    respondeu: {"status":"ok"}
+[OK] Health checks dos cinco microsserviços aprovados.
+
+============================================================
+ETAPA 05 — Obtendo a chave interna da aplicação com segurança
+============================================================
+[OK] Chave interna encontrada no Secret Kubernetes.
+[INFO] O valor da chave não será impresso nem salvo pelo script.
+
+============================================================
+ETAPA 06 — Configurando a feature flag
+============================================================
+[INFO] A feature flag já existia; ela será atualizada e reutilizada.
+[OK] Feature flag ativa e pronta para avaliação:
+{
+    "created_at": "Tue, 15 Sep 2026 01:09:13 GMT",
+    "description": "Flag do teste E2E AWS",
+    "id": 1,
+    "is_enabled": true,
+    "name": "enable-new-dashboard",
+    "updated_at": "Tue, 15 Sep 2026 01:09:13 GMT"
+}
+
+============================================================
+ETAPA 07 — Configurando a regra de targeting
+============================================================
+[INFO] A regra de targeting já existia; ela será atualizada e reutilizada.
+[OK] Regra ativa, liberando a flag para 100% dos usuários:
+{
+    "created_at": "Tue, 15 Sep 2026 01:09:14 GMT",
+    "flag_name": "enable-new-dashboard",
+    "id": 1,
+    "is_enabled": true,
+    "rules": {
+        "type": "PERCENTAGE",
+        "value": 100
+    },
+    "updated_at": "Tue, 15 Sep 2026 01:09:14 GMT"
+}
+[INFO] Chave interna removida da memória do script após a configuração.
+
+============================================================
+ETAPA 08 — Registrando o estado do DynamoDB antes da avaliação
+============================================================
+[OK] Tabela ToggleMasterAnalytics acessível.
+[INFO] Quantidade de eventos antes do teste: 4
+[INFO] Identificador desta execução: 20260915T040815Z
+[INFO] Usuário único usado nesta execução: aws-e2e-20260915T040815Z
+
+============================================================
+ETAPA 09 — Avaliando a flag para o usuário de teste
+============================================================
+Resposta recebida do evaluation-service:
+{
+    "flag_name": "enable-new-dashboard",
+    "user_id": "aws-e2e-20260915T040815Z",
+    "result": true
+}
+[OK] Decisão positiva validada: a flag foi liberada para o usuário.
+[INFO] Ao responder, o evaluation-service também publicou um evento no SQS.
+
+============================================================
+ETAPA 10 — Aguardando SQS e analytics processarem o evento
+============================================================
+[INFO] Verificação 01/30: eventos antes=4, agora=5
+[OK] A quantidade de eventos aumentou de 4 para 5.
+[OK] O analytics-service consumiu o evento do SQS e gravou no DynamoDB.
+
+============================================================
+ETAPA 11 — Localizando o evento exato criado por esta execução
+============================================================
+Evento confirmado no DynamoDB:
+{
+    "event_id": "7474cc28-bbed-4c8a-a6ce-4002443c68d6",
+    "user_id": "aws-e2e-20260915T040815Z",
+    "flag_name": "enable-new-dashboard",
+    "result": true,
+    "timestamp": "2026-09-15T04:08:35.63227678Z"
+}
+[OK] Evento desta execução localizado pelo usuário único.
+
+============================================================
+ETAPA 12 — Exibindo logs seguros do processamento
+============================================================
+evaluation-service — envio para o SQS:
+[pod/evaluation-service-fff6bc749-9b8x8/evaluation-service] 2026/09/15 04:06:37 Evento de avaliação enviado para SQS (Flag: enable-new-dashboard)
+[pod/evaluation-service-fff6bc749-9b8x8/evaluation-service] 2026/09/15 04:08:35 Evento de avaliação enviado para SQS (Flag: enable-new-dashboard)
+
+analytics-service — consumo e gravação:
+[pod/analytics-service-cc8c4fd46-vn4c7/analytics-service] 2026-09-15 04:06:37,968 - INFO - Recebidas 1 mensagens.
+[pod/analytics-service-cc8c4fd46-vn4c7/analytics-service] 2026-09-15 04:06:38,062 - INFO - Evento e4771f4c-91cd-4d8a-8771-63fe32b47e84 (Flag: enable-new-dashboard) salvo no DynamoDB.
+[pod/analytics-service-cc8c4fd46-vn4c7/analytics-service] 2026-09-15 04:08:35,708 - INFO - Recebidas 1 mensagens.
+[pod/analytics-service-cc8c4fd46-vn4c7/analytics-service] 2026-09-15 04:08:35,830 - INFO - Evento 7474cc28-bbed-4c8a-a6ce-4002443c68d6 (Flag: enable-new-dashboard) salvo no DynamoDB.
+
+============================================================
+ETAPA 13 — Resultado final
+============================================================
+Fluxo comprovado:
+  1. EKS e pods disponíveis.
+  2. Cinco health checks aprovados.
+  3. Chave interna obtida sem exposição.
+  4. Feature flag ativa.
+  5. Regra de targeting ativa para 100% dos usuários.
+  6. Evaluation-service retornou true.
+  7. Evento publicado no SQS.
+  8. Analytics-service consumiu o evento.
+  9. Evento localizado no DynamoDB.
+
+Teste E2E AWS: APROVADO.
