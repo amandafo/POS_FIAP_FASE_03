@@ -10,12 +10,12 @@ RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /bin/auth-se
 
 FROM alpine:3.20
 
-RUN addgroup -S app && adduser -S app -G app
+RUN addgroup -g 10001 -S app && adduser -u 10001 -S app -G app
 WORKDIR /app
 
 COPY --from=build /bin/auth-service /app/auth-service
 
-USER app
+USER 10001:10001
 EXPOSE 8001
 
 ENTRYPOINT ["/app/auth-service"]
