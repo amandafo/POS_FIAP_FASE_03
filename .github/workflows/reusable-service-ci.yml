@@ -51,9 +51,9 @@ jobs:
 
       - name: Lint Go
         if: inputs.language == 'go'
-        uses: golangci/golangci-lint-action@v8
+        uses: golangci/golangci-lint-action@v9
         with:
-          version: v2.4.0
+          version: v2.13.2
           working-directory: ${{ inputs.service }}
 
       - name: SAST Go
