@@ -1,0 +1,296 @@
+{
+	"Nome": "ToggleMaster - Ambiente de Homologação AWS",
+	"Custo total": {
+		"mensal": "397.90",
+		"Pagamento adiantado": "180.00",
+		"12 meses": "4954.80"
+	},
+	"Metadados": {
+		"Moeda": "USD",
+		"Localidade": "pt_BR",
+		"Criado em": "15/09/2026",
+		"Isenção de responsabilidade legal": "A Calculadora de Preços da AWS fornece apenas uma estimativa de suas taxas da AWS e não inclui nenhuma taxa aplicável. Suas taxas reais dependem de vários fatores, inclusive de seu uso real dos serviços da AWS.",
+		"Compartilhar URL": "https://calculator.aws/#/estimate?id=afcd04ac7ecaa1dd6aebdfe77d91218da89ed730"
+	},
+	"Grupos": {
+		"Serviços": [
+			{
+				"Nome do serviço": "Amazon EKS",
+				"Região": "Leste dos EUA (N. da Virgínia)",
+				"Status": "",
+				"Custo do serviço": {
+					"mensal": "73.00",
+					"Pagamento adiantado": "0.00",
+					"12 meses": "876.00"
+				},
+				"Propriedades": {
+					"Número de nós híbridos": "0 por mês",
+					"Número de clusters do EKS": "1"
+				}
+			},
+			{
+				"Nome do serviço": "Amazon EC2 ",
+				"Região": "Leste dos EUA (N. da Virgínia)",
+				"Status": "",
+				"Custo do serviço": {
+					"mensal": "3.07",
+					"Pagamento adiantado": "0.00",
+					"12 meses": "36.79"
+				},
+				"Propriedades": {
+					"Locação": "Instâncias compartilhadas",
+					"Sistema operacional": "Linux",
+					"Carga de trabalho": "Consistent, Número de instâncias: 2",
+					"Instância do EC2 avançada": "t4g.nano",
+					"Pricing strategy": "3yr  No Upfront",
+					"Habilitar monitoramento": "desabilitada",
+					"DT Entrada: Not selected": "0 TB por mês",
+					"DT Saída: Not selected": "0 TB por mês",
+					"DT Intrarregião:": "0 TB por mês"
+				}
+			},
+			{
+				"Nome do serviço": "Amazon Aurora PostgreSQL-Compatible DB",
+				"Região": "Leste dos EUA (N. da Virgínia)",
+				"Status": "",
+				"Custo do serviço": {
+					"mensal": "118.26",
+					"Pagamento adiantado": "0.00",
+					"12 meses": "1419.12"
+				},
+				"Propriedades": {
+					"Opção de configuração de cluster do Aurora PostgreSQL": "Otimizada para E/S do Aurora",
+					"Nós": "1",
+					"Tipo de instância": "db.t3.medium",
+					"Utilização": "100 %Utilized/Month",
+					"Modelo de preço": "OnDemand",
+					"Quantidade": "1"
+				}
+			},
+			{
+				"Nome do serviço": "Amazon Elastic Container Registry",
+				"Região": "Leste dos EUA (N. da Virgínia)",
+				"Status": "",
+				"Custo do serviço": {
+					"mensal": "0.50",
+					"Pagamento adiantado": "0.00",
+					"12 meses": "6.00"
+				},
+				"Propriedades": {
+					"Quantidade de dados armazenados": "5 GB por mês"
+				}
+			},
+			{
+				"Nome do serviço": "Amazon Simple Queue Service (SQS)",
+				"Região": "Leste dos EUA (N. da Virgínia)",
+				"Status": "",
+				"Custo do serviço": {
+					"mensal": "0.40",
+					"Pagamento adiantado": "0.00",
+					"12 meses": "4.80"
+				},
+				"Propriedades": {
+					"DT Entrada: Not selected": "0 TB por mês",
+					"DT Saída: Not selected": "0 TB por mês",
+					"Solicitações de fila padrão": "1 milhões por mês",
+					"Solicitações de fila FIFO": "0 milhões por mês"
+				}
+			},
+			{
+				"Nome do serviço": "DynamoDB on-demand capacity",
+				"Região": "Leste dos EUA (N. da Virgínia)",
+				"Status": "",
+				"Custo do serviço": {
+					"mensal": "0.88",
+					"Pagamento adiantado": "0.00",
+					"12 meses": "10.56"
+				},
+				"Propriedades": {
+					"Classe de tabela": "Standard",
+					"Tamanho médio do item (todos os atributos)": "1 KB",
+					"Tamanho do armazenamento de dados": "1 GB"
+				}
+			},
+			{
+				"Nome do serviço": "AWS Secrets Manager",
+				"Região": "Leste dos EUA (N. da Virgínia)",
+				"Status": "",
+				"Custo do serviço": {
+					"mensal": "7.00",
+					"Pagamento adiantado": "0.00",
+					"12 meses": "84.00"
+				},
+				"Propriedades": {
+					"Número de segredos": "5",
+					"Duração média de cada segredo": "30 dias",
+					"Número de chamadas de API": "1000000 por mês"
+				}
+			},
+			{
+				"Nome do serviço": "S3 Standard",
+				"Região": "Leste dos EUA (N. da Virgínia)",
+				"Status": "",
+				"Custo do serviço": {
+					"mensal": "0.03",
+					"Pagamento adiantado": "0.00",
+					"12 meses": "0.36"
+				},
+				"Propriedades": {
+					"Dados retornados pelo S3 Select": "1 GB por mês",
+					"Dados verificados pelo S3 Select": "1 GB por mês",
+					"Solicitações PUT, COPY, POST, LIST para S3 Standard": "1000",
+					"GET, SELECT e todas as outras solicitações do S3 Standard": "1000",
+					"Armazenamento S3 Standard": "1 GB por mês"
+				}
+			},
+			{
+				"Nome do serviço": "Data Transfer",
+				"Região": "Leste dos EUA (N. da Virgínia)",
+				"Status": "",
+				"Custo do serviço": {
+					"mensal": "0.00",
+					"Pagamento adiantado": "0.00",
+					"12 meses": "0.00"
+				},
+				"Propriedades": {}
+			},
+			{
+				"Nome do serviço": "Amazon ElastiCache",
+				"Região": "Leste dos EUA (N. da Virgínia)",
+				"Status": "",
+				"Custo do serviço": {
+					"mensal": "21.35",
+					"Pagamento adiantado": "0.00",
+					"12 meses": "256.14"
+				},
+				"Propriedades": {
+					"Mecanismo": "Redis OSS",
+					"Modelo de preço": "OnDemand",
+					"Mecanismo de cache": "Redis",
+					"Tipo de instância": "cache.r6gd.12xlarge",
+					"Nós": "0",
+					"Utilização (somente sob demanda)": "100 %Utilized/Month",
+					"Tipo de nó de cache": "Memory optimized",
+					"Taxa média de solicitações simples": "1000 por segundo",
+					"Média de dados transferidos por solicitação [KBs]": "1"
+				}
+			},
+			{
+				"Nome do serviço": "Network Address Translation (NAT) Gateway",
+				"Região": "Leste dos EUA (N. da Virgínia)",
+				"Status": "",
+				"Custo do serviço": {
+					"mensal": "65.78",
+					"Pagamento adiantado": "0.00",
+					"12 meses": "789.36"
+				},
+				"Propriedades": {
+					"Número de gateways NAT regionais": "1",
+					"Número de zonas de disponibilidade em que os gateways NAT regionais estão ativos": "01",
+					"Número de gateways NAT": "1"
+				}
+			},
+			{
+				"Nome do serviço": "Amazon Elastic Block Store (EBS)",
+				"Região": "Leste dos EUA (N. da Virgínia)",
+				"Status": "",
+				"Custo do serviço": {
+					"mensal": "7.49",
+					"Pagamento adiantado": "0.00",
+					"12 meses": "89.88"
+				},
+				"Propriedades": {
+					"Número de volumes": "1",
+					"Duração média de volume": "730 horas por mês",
+					"Quantidade de armazenamento por volume": "20 GB",
+					"Frequência de snapshots": "Duas vezes ao dia",
+					"Quantidade alterada por snapshot": "3 GB"
+				}
+			},
+			{
+				"Nome do serviço": "Application Load Balancer",
+				"Região": "Leste dos EUA (N. da Virgínia)",
+				"Status": "",
+				"Custo do serviço": {
+					"mensal": "31.03",
+					"Pagamento adiantado": "0.00",
+					"12 meses": "372.36"
+				},
+				"Propriedades": {
+					"Número de Application Load Balancers": "1"
+				}
+			},
+			{
+				"Nome do serviço": "Network Load Balancer",
+				"Região": "Leste dos EUA (N. da Virgínia)",
+				"Status": "",
+				"Custo do serviço": {
+					"mensal": "20.81",
+					"Pagamento adiantado": "0.00",
+					"12 meses": "249.72"
+				},
+				"Propriedades": {
+					"Número de Network Load Balancers": "1",
+					"Bytes processados por NLB para TCP": "1 GB por hora"
+				}
+			},
+			{
+				"Nome do serviço": "Gateway Load Balancer",
+				"Região": "Leste dos EUA (N. da Virgínia)",
+				"Status": "",
+				"Custo do serviço": {
+					"mensal": "21.91",
+					"Pagamento adiantado": "0.00",
+					"12 meses": "262.92"
+				},
+				"Propriedades": {
+					"Número de zonas de disponibilidade nas quais o Gateway Load Balancer está implantado": "1",
+					"Número de Gateway Load Balancer Endpoints": "1",
+					"Total de bytes processados": "1 GB por hora"
+				}
+			},
+			{
+				"Nome do serviço": "DynamoDB on-demand capacity",
+				"Região": "Leste dos EUA (N. da Virgínia)",
+				"Status": "",
+				"Custo do serviço": {
+					"mensal": "0.00",
+					"Pagamento adiantado": "0.00",
+					"12 meses": "0.00"
+				},
+				"Propriedades": {
+					"Classe de tabela": "Standard",
+					"Tamanho médio do item (todos os atributos)": "1 KB"
+				}
+			},
+			{
+				"Nome do serviço": "DynamoDB provisioned capacity",
+				"Região": "Leste dos EUA (N. da Virgínia)",
+				"Status": "",
+				"Custo do serviço": {
+					"mensal": "26.39",
+					"Pagamento adiantado": "180.00",
+					"12 meses": "496.68"
+				},
+				"Propriedades": {
+					"Classe de tabela": "Standard",
+					"Tamanho médio do item (todos os atributos)": "1 KB",
+					"Prazo da capacidade reservada de gravação": "1 ano",
+					"Prazo da capacidade reservada de leitura": "1 ano",
+					"Tamanho do armazenamento de dados": "1 GB"
+				}
+			},
+			{
+				"Nome do serviço": "DynamoDB Backup and restore",
+				"Região": "Leste dos EUA (N. da Virgínia)",
+				"Status": "",
+				"Custo do serviço": {
+					"mensal": "0.00",
+					"Pagamento adiantado": "0.00",
+					"12 meses": "0.00"
+				},
+				"Propriedades": {}
+			}
+		]
+	}
+}

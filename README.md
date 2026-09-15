@@ -1,45 +1,132 @@
 # ToggleMaster — Tech Challenge Fase 3
 
-Evolução do ToggleMaster para uma plataforma de microsserviços com infraestrutura criada por Terraform, pipelines DevSecOps e deploy automático por GitOps.
+O ToggleMaster é uma plataforma de *feature flags*: ela permite ativar ou desativar funcionalidades e definir regras de liberação sem publicar uma nova versão da aplicação.
+
+Nesta fase, os cinco microsserviços criados anteriormente foram integrados a uma plataforma completa de infraestrutura como código, DevSecOps, containers, Kubernetes e GitOps. Todo o ambiente de homologação é descrito em Terraform, as imagens passam por verificações de segurança antes da publicação e o ArgoCD mantém o Amazon EKS sincronizado com o estado declarado no Git.
 
 ## Arquitetura
 
-O projeto contém cinco serviços:
+```mermaid
+flowchart LR
+    U[Cliente] --> NLB[Network Load Balancer]
+    NLB --> EVAL[evaluation-service]
 
-| Serviço | Tecnologia | Responsabilidade |
-|---|---|---|
-| `auth-service` | Go | Cria e valida chaves de API |
-| `flag-service` | Python/Flask | Gerencia feature flags |
-| `targeting-service` | Python/Flask | Gerencia regras de segmentação |
-| `evaluation-service` | Go | Avalia flags, usa Redis e publica eventos no SQS |
-| `analytics-service` | Python/Flask | Consome o SQS e grava eventos no DynamoDB |
+    EVAL --> AUTH[auth-service]
+    EVAL --> FLAG[flag-service]
+    EVAL --> TARGET[targeting-service]
+    EVAL --> REDIS[(ElastiCache Redis)]
+    EVAL --> SQS[SQS]
 
-Na AWS, o Terraform cria VPC, duas subnets públicas, duas privadas, NAT Gateway, EKS com node group, três RDS PostgreSQL, Redis, DynamoDB, SQS com DLQ, cinco ECR e segredos no Secrets Manager. O state fica em um bucket S3 remoto.
+    AUTH --> DBA[(RDS auth)]
+    FLAG --> DBF[(RDS flags)]
+    TARGET --> DBT[(RDS targeting)]
+    SQS --> ANALYTICS[analytics-service]
+    ANALYTICS --> DDB[(DynamoDB)]
 
-O projeto usa a `LabRole` já fornecida pelo AWS Academy. Nenhuma role ou policy IAM é criada pelo Terraform.
+    SM[Secrets Manager] --> ESO[External Secrets]
+    ESO --> AUTH
+    ESO --> FLAG
+    ESO --> TARGET
+    ESO --> EVAL
+    ESO --> ANALYTICS
 
-## Fluxo de entrega
+    CI[GitHub Actions] --> ECR[ECR]
+    CI --> GITOPS[Pasta GitOps]
+    GITOPS --> ARGO[ArgoCD]
+    ARGO --> EKS[Amazon EKS]
+    ECR --> EKS
+```
 
-1. Um Pull Request executa testes, lint, SAST, SCA, build e scan da imagem.
-2. Vulnerabilidades críticas impedem a publicação.
-3. Um push aprovado na `main` publica a imagem no ECR usando o SHA do commit.
-4. O pipeline altera a tag em `gitops/apps/<serviço>/kustomization.yaml`.
-5. O ArgoCD detecta o commit e sincroniza automaticamente o EKS.
+### Microsserviços
 
-Não é usada a tag `latest` nos deployments.
+| Serviço | Tecnologia | Porta local | Responsabilidade |
+|---|---|---:|---|
+| `auth-service` | Go | 8001 | Criação e validação de chaves de API |
+| `flag-service` | Python/Flask | 8002 | Cadastro e manutenção das feature flags |
+| `targeting-service` | Python/Flask | 8003 | Regras de segmentação e liberação |
+| `evaluation-service` | Go | 8004 | Avaliação das flags, cache Redis e publicação no SQS |
+| `analytics-service` | Python/Flask | 8005 | Consumo do SQS e gravação dos eventos no DynamoDB |
+
+O fluxo integrado valida uma chave, cria uma flag, configura uma regra, avalia um usuário, publica um evento no SQS e confirma a gravação desse evento no DynamoDB.
+
+## Infraestrutura AWS
+
+O Terraform provisiona os seguintes componentes na região `us-east-1`:
+
+- uma VPC distribuída em duas zonas de disponibilidade;
+- duas subnets públicas e duas privadas;
+- Internet Gateway, tabelas de rotas e um NAT Gateway;
+- um cluster Amazon EKS com Managed Node Group;
+- dois nodes EC2 `t3.medium`, com mínimo de um e máximo de três;
+- três instâncias PostgreSQL `db.t3.micro` no Amazon RDS;
+- um node Redis `cache.t3.micro` no Amazon ElastiCache;
+- uma tabela DynamoDB no modo sob demanda;
+- uma fila SQS Standard e uma fila de mensagens não processadas (DLQ);
+- cinco repositórios privados e imutáveis no Amazon ECR;
+- cinco secrets no AWS Secrets Manager;
+- ArgoCD, External Secrets Operator e Metrics Server instalados por Helm.
+
+Os nodes, bancos e Redis ficam nas subnets privadas. O serviço de avaliação é publicado por um Network Load Balancer.
+
+O projeto utiliza a `LabRole` fornecida pelo AWS Academy. O Terraform não cria roles nem policies IAM.
+
+## Organização do repositório
+
+```text
+.
+├── .github/workflows/       # pipelines dos serviços e workflow reutilizável
+├── analytics-service/       # worker de analytics
+├── auth-service/            # autenticação e chaves de API
+├── evaluation-service/      # avaliação das feature flags
+├── flag-service/            # cadastro das flags
+├── targeting-service/       # regras de segmentação
+├── gitops/                  # manifests Kubernetes e aplicações do ArgoCD
+├── infra/                   # Terraform e seus módulos
+├── scripts/                 # automações locais, AWS e GitOps
+├── docs/                    # relatório, guia e evidências
+├── docker-compose.yml       # ambiente local completo
+└── Makefile                 # comandos de desenvolvimento e validação
+```
+
+## Pré-requisitos
+
+Para a execução local:
+
+- Git;
+- Docker com Docker Compose;
+- `curl`;
+- `make`.
+
+Para utilizar o ambiente AWS:
+
+- sessão ativa no AWS Academy;
+- AWS CLI;
+- `kubectl`;
+- acesso ao Docker, utilizado pelo wrapper do Terraform.
+
+O Terraform não precisa estar instalado diretamente na máquina, pois o script `scripts/terraform-docker.sh` utiliza uma imagem oficial.
 
 ## Executar localmente
 
-Pré-requisito: Docker com Compose.
+Suba todos os microsserviços e suas dependências:
 
 ```bash
 make local-up
-make health
-make e2e
-make local-down
 ```
 
-Validações locais:
+Confirme os cinco health checks:
+
+```bash
+make health
+```
+
+Execute o fluxo integrado:
+
+```bash
+make e2e
+```
+
+Execute as verificações separadamente:
 
 ```bash
 make test
@@ -49,57 +136,212 @@ make sca
 make terraform-check
 ```
 
-## Trabalhar com o AWS Academy
+Encerre o ambiente local:
 
-As credenciais temporárias devem ser salvas em `credentials_aws_academy.txt`, que está no `.gitignore`. Para carregá-las:
+```bash
+make local-down
+```
+
+O Docker Compose utiliza PostgreSQL, Redis, ElasticMQ como implementação local do SQS e DynamoDB Local. Assim, o fluxo pode ser validado sem consumir recursos da AWS.
+
+## Credenciais temporárias do AWS Academy
+
+As credenciais devem ser copiadas para o arquivo local `credentials_aws_academy.txt`. Esse arquivo está no `.gitignore` e nunca deve ser versionado.
+
+Carregue a sessão no terminal:
 
 ```bash
 source scripts/aws-academy-env.sh
-aws sts get-caller-identity
 ```
 
-Sempre que a sessão for renovada, sincronize a credencial temporária usada pelo External Secrets e pelos dois serviços que acessam SQS/DynamoDB:
+As credenciais do Academy expiram. Depois de iniciar uma nova sessão, substitua o conteúdo do arquivo e execute o comando novamente.
+
+## Terraform
+
+### Configuração
+
+Crie o arquivo de variáveis local a partir do exemplo:
+
+```bash
+cp infra/terraform.tfvars.example infra/terraform.tfvars
+```
+
+O arquivo `infra/terraform.tfvars` é ignorado pelo Git. A configuração padrão utiliza recursos pequenos para homologação.
+
+### Backend remoto
+
+O `terraform.tfstate` é armazenado em um bucket S3 com criptografia, versionamento, bloqueio de acesso público e arquivo de lock. O bucket precisa existir antes da primeira inicialização.
+
+```bash
+source scripts/aws-academy-env.sh
+
+./scripts/terraform-docker.sh init \
+  -backend-config="bucket=<BUCKET_DO_STATE>"
+```
+
+### Provisionamento em duas etapas
+
+Na primeira execução, mantenha `install_platform = false` em `infra/terraform.tfvars` e crie a infraestrutura base:
+
+```bash
+./scripts/terraform-docker.sh plan
+./scripts/terraform-docker.sh apply
+```
+
+Quando o EKS estiver ativo, altere para `install_platform = true` e aplique novamente. Essa segunda etapa instala ArgoCD, External Secrets e Metrics Server:
+
+```bash
+./scripts/terraform-docker.sh plan
+./scripts/terraform-docker.sh apply
+```
+
+Para confirmar que o código corresponde ao ambiente provisionado:
+
+```bash
+./scripts/terraform-docker.sh plan
+```
+
+O resultado esperado depois do provisionamento é `No changes`.
+
+## Conectar ao Amazon EKS
+
+```bash
+aws eks update-kubeconfig \
+  --region us-east-1 \
+  --name togglemaster-cluster
+
+kubectl get nodes
+```
+
+Por causa das limitações de IAM do AWS Academy, as credenciais temporárias usadas pelo External Secrets e pelos serviços que acessam SQS e DynamoDB precisam ser sincronizadas após cada renovação do laboratório:
 
 ```bash
 ./scripts/sync-academy-k8s-credentials.sh
 ```
 
-Terraform é executado em Docker:
+Esse processo cria ou atualiza apenas Secrets dentro do cluster; nenhuma credencial é salva nos manifests do Git.
 
-```bash
-source scripts/aws-academy-env.sh
-./scripts/terraform-docker.sh init -backend-config="bucket=<BUCKET_DO_STATE>"
-./scripts/terraform-docker.sh plan
-./scripts/terraform-docker.sh apply
-```
+## CI/CD e DevSecOps
 
-O arquivo local ignorado `infra/terraform.tfvars` mantém `install_platform = true` depois da primeira instalação. Em uma conta nova, faça primeiro a infraestrutura com `false` e somente depois instale os charts com `true`.
+Cada microsserviço possui seu próprio workflow em `.github/workflows/`. As etapas compartilhadas estão em `reusable-service-ci.yml`.
+
+| Etapa | Ferramentas | Comportamento |
+|---|---|---|
+| Testes | `go test` e `pytest` | Valida o comportamento dos serviços |
+| Lint | `golangci-lint` e `ruff` | Verifica qualidade e padrões do código |
+| SAST | `gosec` e `bandit` | Procura problemas de segurança no código-fonte |
+| SCA | Trivy filesystem | Analisa vulnerabilidades nas dependências |
+| Build | Docker | Constrói a imagem do microsserviço |
+| Container scan | Trivy image | Bloqueia vulnerabilidades críticas corrigíveis |
+| Publicação | Amazon ECR | Publica somente em push aprovado na `main` |
+| GitOps | Git e Kustomize | Atualiza o manifest com o SHA publicado |
+
+Pull Requests executam todas as validações, mas não publicam imagens. Um push aprovado na `main` publica a imagem no ECR com o SHA completo do commit e cria automaticamente a atualização GitOps.
+
+A tag `latest` não é utilizada nos deployments.
 
 ## GitOps e ArgoCD
 
-Os manifests estão em `gitops/`. Para cadastrar a aplicação raiz:
+Os manifests Kubernetes estão em `gitops/`. Cada microsserviço possui Deployment, Service e configuração Kustomize próprios.
+
+Cadastre a aplicação raiz do ArgoCD:
 
 ```bash
 kubectl apply -f gitops/argocd/root-application.yaml
 kubectl get applications -n argocd
 ```
 
-Para abrir a interface:
+Abra a interface local:
 
 ```bash
 kubectl port-forward svc/argocd-server -n argocd 8080:80
 ```
 
-Acesse `http://localhost:8080`. A senha inicial deve ser consultada diretamente no cluster e nunca adicionada ao repositório.
+Acesse `http://localhost:8080`. A senha inicial deve ser consultada diretamente no cluster e nunca incluída no repositório ou em uma gravação.
+
+O fluxo de entrega é:
+
+1. o pipeline valida o código e a imagem;
+2. a imagem aprovada é publicada no ECR com o SHA do commit;
+3. o pipeline atualiza `gitops/apps/<serviço>/kustomization.yaml`;
+4. o ArgoCD detecta o novo commit;
+5. o ArgoCD sincroniza automaticamente o EKS.
+
+## Validar o ambiente AWS
+
+Verifique os componentes principais:
+
+```bash
+kubectl get nodes
+kubectl get applications -n argocd
+kubectl get deployments -n togglemaster
+kubectl get pods -n togglemaster -o wide
+kubectl get services -n togglemaster
+```
+
+Execute o teste E2E diretamente na AWS:
+
+```bash
+source scripts/aws-academy-env.sh
+./scripts/comprovacao-aws-e2e.sh
+```
+
+O script:
+
+1. valida as ferramentas e a sessão do AWS Academy;
+2. verifica nodes, deployments e pods;
+3. testa a saúde dos cinco microsserviços;
+4. cria ou atualiza uma feature flag;
+5. configura uma regra de liberação para 100% dos usuários;
+6. avalia um usuário único e confirma o resultado positivo;
+7. verifica a publicação do evento no SQS;
+8. confirma o consumo pelo serviço de analytics;
+9. localiza o evento correspondente no DynamoDB.
+
+O resultado esperado é:
+
+```text
+Teste E2E AWS: APROVADO.
+```
 
 ## Segurança
 
-- Credenciais, states, planos Terraform e arquivos de variáveis locais são ignorados pelo Git.
-- Senhas dos bancos e chaves das aplicações ficam no AWS Secrets Manager.
-- O External Secrets entrega os valores ao Kubernetes sem secrets em YAML.
-- Como o AWS Academy não permite criar IAM, as credenciais temporárias dos workloads são sincronizadas por comando e precisam ser renovadas junto com a sessão.
-- As imagens rodam como usuário não root e com capabilities removidas.
+- credenciais, states, planos Terraform e arquivos locais de variáveis são ignorados pelo Git;
+- bancos e Redis não são expostos publicamente;
+- senhas e chaves ficam no AWS Secrets Manager;
+- o External Secrets entrega valores ao Kubernetes sem secrets em YAML;
+- imagens executam como usuário não root, sem elevação de privilégios e com capabilities removidas;
+- imagens são identificadas pelo SHA imutável do commit;
+- SAST, SCA e scan de container fazem parte do pipeline;
+- vulnerabilidades críticas corrigíveis impedem a publicação da imagem;
+- o deploy é realizado pelo ArgoCD, sem `kubectl apply` no pipeline.
 
-## Acompanhamento
+## Estimativa de custos
 
-O estado detalhado das atividades está em [`TODO.md`](TODO.md). O relatório de entrega está em [`docs/RELATORIO_ENTREGA.md`](docs/RELATORIO_ENTREGA.md).
+A estimativa do ambiente de homologação foi criada no AWS Pricing Calculator para a região `us-east-1`. Os arquivos exportados e o print do resumo estão disponíveis na documentação da entrega.
+
+- custo inicial estimado: **US$ 180,00**;
+- custo mensal estimado: **US$ 397,90**;
+- custo total estimado para 12 meses: **US$ 4.954,80**.
+
+Esses valores são apenas uma referência de planejamento e podem variar conforme preços, tráfego e consumo real.
+
+## Documentação e evidências
+
+- [Relatório de entrega](docs/RELATORIO_ENTREGA.md)
+- [Guia de comprovações](docs/GUIA_COMPROVACOES_FASE_03.md)
+- [Evidências textuais e visuais](docs/evidencias/)
+- [Estimativa do AWS Pricing Calculator em PDF](<docs/ToggleMaster - Homologacao.pdf>)
+- [Estimativa detalhada em JSON](<docs/evidencias/ToggleMaster - Ambiente de Homologação AWS.json>)
+
+## Encerramento do ambiente
+
+Somente destrua os recursos depois de concluir a gravação, salvar as evidências e exportar o relatório final:
+
+```bash
+source scripts/aws-academy-env.sh
+./scripts/terraform-docker.sh plan -destroy
+./scripts/terraform-docker.sh destroy
+```
+
+Revise o plano antes de confirmar. O bucket que armazena o state deve ser removido apenas depois que os demais recursos forem destruídos corretamente.
