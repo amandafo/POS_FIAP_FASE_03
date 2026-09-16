@@ -7,7 +7,7 @@
 ## Links
 
 - Repositório: https://github.com/amandafo/POS_FIAP_FASE_03
-- Vídeo: https://1drv.ms/v/c/9bd3dfa9a5995552/IQABV_-voK-LQZGGIiZaBpGvAZmPHFdMM2FvN6CImjyYC1Q?e=QcHM93
+- Vídeo: https://1drv.ms/v/c/9bd3dfa9a5995552/IQABV_-voK-LQZGGIiZaBpGvAZmPHFdMM2FvN6CImjyYC1Q?e=QcHM93 (Não copie o link apenas clique, por algum motivo copiando não está funcionando)
 - Documentação: https://github.com/amandafo/POS_FIAP_FASE_03
 
 ## Resumo da solução
