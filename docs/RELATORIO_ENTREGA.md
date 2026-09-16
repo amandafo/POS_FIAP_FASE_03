@@ -54,7 +54,7 @@ https://github.com/amandafo/POS_FIAP_FASE_03/actions/runs/34916382484
 
 ## Comprovações visuais
 
-As imagens abaixo foram registradas em `docs/evidencias/prints/`. O caminho utilizado para chegar a cada tela está explicado em [`GUIA_COMPROVACOES_FASE_03.md`](GUIA_COMPROVACOES_FASE_03.md).
+As imagens abaixo foram registradas em `docs/evidencias/prints/` e estão consolidadas no documento de [comprovações do projeto](COMPROVACOES_PROJETO.md).
 
 Antes de anexar uma imagem, é necessário conferir se ela não mostra credenciais, tokens, senhas, valores de secrets ou outras informações sensíveis.
 

@@ -9,7 +9,7 @@ Nesta fase, os cinco microsserviços criados anteriormente foram integrados a um
 - [Vídeo de demonstração](https://1drv.ms/v/c/9bd3dfa9a5995552/IQABV_-voK-LQZGGIiZaBpGvAZmPHFdMM2FvN6CImjyYC1Q?e=QcHM93)
 - [Relatório de entrega em PDF](docs/RELATORIO_ENTREGA.pdf)
 - [Relatório de entrega em Markdown](docs/RELATORIO_ENTREGA.md)
-- [Guia de comprovações](docs/GUIA_COMPROVACOES_FASE_03.md)
+- [Comprovações do projeto](docs/COMPROVACOES_PROJETO.md)
 
 ## Arquitetura
 
@@ -337,7 +337,7 @@ Esses valores são apenas uma referência de planejamento e podem variar conform
 
 - [Relatório de entrega em PDF](docs/RELATORIO_ENTREGA.pdf)
 - [Relatório de entrega em Markdown](docs/RELATORIO_ENTREGA.md)
-- [Guia de comprovações](docs/GUIA_COMPROVACOES_FASE_03.md)
+- [Comprovações do projeto](docs/COMPROVACOES_PROJETO.md)
 - [Evidências textuais e visuais](docs/evidencias/)
 - [Estimativa do AWS Pricing Calculator em PDF](<docs/ToggleMaster - Homologacao.pdf>)
 - [Estimativa detalhada em JSON](<docs/evidencias/ToggleMaster - Ambiente de Homologação AWS.json>)
