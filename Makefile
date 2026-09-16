@@ -61,5 +61,11 @@ terraform-fmt:
 
 terraform-check:
 	docker run --rm --user "$$(id -u):$$(id -g)" -v "$(CURDIR):/workspace" -w /workspace/infra $(TERRAFORM_IMAGE) fmt -check -recursive
-	docker run --rm --user "$$(id -u):$$(id -g)" -v "$(CURDIR):/workspace" -w /workspace/infra $(TERRAFORM_IMAGE) init -backend=false
-	docker run --rm --user "$$(id -u):$$(id -g)" -v "$(CURDIR):/workspace" -w /workspace/infra $(TERRAFORM_IMAGE) validate
+	docker run --rm --user "$$(id -u):$$(id -g)" \
+		-e HOME=/tmp \
+		-e TF_DATA_DIR=/tmp/terraform-data \
+		-v "$(CURDIR):/workspace" \
+		-w /workspace/infra \
+		--entrypoint sh \
+		$(TERRAFORM_IMAGE) \
+		-c 'terraform init -backend=false -input=false && terraform validate'

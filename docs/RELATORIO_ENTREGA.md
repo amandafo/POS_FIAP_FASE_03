@@ -7,8 +7,8 @@
 ## Links
 
 - Repositório: https://github.com/amandafo/POS_FIAP_FASE_03
-- Vídeo: **[PREENCHER APÓS A PUBLICAÇÃO DO VÍDEO]**
-- Documentação: README do repositório.
+- Vídeo: https://1drv.ms/v/c/9bd3dfa9a5995552/IQABV_-voK-LQZGGIiZaBpGvAZmPHFdMM2FvN6CImjyYC1Q?e=QcHM93
+- Documentação: https://github.com/amandafo/POS_FIAP_FASE_03
 
 ## Resumo da solução
 
@@ -45,11 +45,6 @@ O container não possuía um diretório de cache gravável. O wrapper do Terrafo
 O Trivy encontrou três vulnerabilidades críticas corrigíveis no pacote `perl-base` da imagem-base. Os Dockerfiles foram alterados para aplicar as atualizações de segurança do sistema durante o build. Depois disso, os três scans foram aprovados.
 
 ## Evidências registradas
-
-- [`evidencias/infraestrutura-validada.txt`](evidencias/infraestrutura-validada.txt)
-- [`evidencias/pipeline-seguranca.txt`](evidencias/pipeline-seguranca.txt)
-- [`evidencias/gitops-e2e.txt`](evidencias/gitops-e2e.txt)
-- [`evidencias/e2e-aws-detalhado.txt`](evidencias/e2e-aws-detalhado.txt)
 
 Execução bloqueada pelo Trivy:
 https://github.com/amandafo/POS_FIAP_FASE_03/actions/runs/34916194667

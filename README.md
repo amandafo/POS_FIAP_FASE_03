@@ -4,6 +4,13 @@ O ToggleMaster é uma plataforma de *feature flags*: ela permite ativar ou desat
 
 Nesta fase, os cinco microsserviços criados anteriormente foram integrados a uma plataforma completa de infraestrutura como código, DevSecOps, containers, Kubernetes e GitOps. Todo o ambiente de homologação é descrito em Terraform, as imagens passam por verificações de segurança antes da publicação e o ArgoCD mantém o Amazon EKS sincronizado com o estado declarado no Git.
 
+## Entrega
+
+- [Vídeo de demonstração](https://1drv.ms/v/c/9bd3dfa9a5995552/IQABV_-voK-LQZGGIiZaBpGvAZmPHFdMM2FvN6CImjyYC1Q?e=QcHM93)
+- [Relatório de entrega em PDF](docs/RELATORIO_ENTREGA.pdf)
+- [Relatório de entrega em Markdown](docs/RELATORIO_ENTREGA.md)
+- [Guia de comprovações](docs/GUIA_COMPROVACOES_FASE_03.md)
+
 ## Arquitetura
 
 ```mermaid
@@ -328,7 +335,8 @@ Esses valores são apenas uma referência de planejamento e podem variar conform
 
 ## Documentação e evidências
 
-- [Relatório de entrega](docs/RELATORIO_ENTREGA.md)
+- [Relatório de entrega em PDF](docs/RELATORIO_ENTREGA.pdf)
+- [Relatório de entrega em Markdown](docs/RELATORIO_ENTREGA.md)
 - [Guia de comprovações](docs/GUIA_COMPROVACOES_FASE_03.md)
 - [Evidências textuais e visuais](docs/evidencias/)
 - [Estimativa do AWS Pricing Calculator em PDF](<docs/ToggleMaster - Homologacao.pdf>)
